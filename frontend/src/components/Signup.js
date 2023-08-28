@@ -8,7 +8,7 @@ const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState(''); // Added state for repeat password
+  const [repeatPassword, setRepeatPassword] = useState(''); 
 
   const handleSignup = async () => {
     try {
@@ -17,7 +17,8 @@ const Signup = () => {
         return;
       }
 
-      const response = await axios.post('codebrew-ep9m-9y4ghdsqj-jeffalden.vercel.app/customer/signup', { name, email, password });
+      // Modified the axios POST request URL
+      const response = await axios.post('https://codebrew-ep9m-9y4ghdsqj-jeffalden.vercel.app/customer/signup', { name, email, password });
       const { status, data } = response.data;
 
       if (status === 'Success') {
