@@ -14,7 +14,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:3006/customer/login', { email, password });
+      const response = await axios.post('codebrew-ep9m-9y4ghdsqj-jeffalden.vercel.app/customer/login', { email, password });
       const { status, token, isAdmin } = response.data;
 
       if (status === 'Success') {
