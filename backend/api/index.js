@@ -7,6 +7,11 @@ const mongoose = require('mongoose');
 const app = express();
 const port = process.env.PORT || 3006;
 
+app.use(cors({
+  origin: 'codebrew-rv546he6r-jeffalden.vercel.app'
+}));
+
+
 const validCredentials = {
   admin: {
     username: 'admin',
