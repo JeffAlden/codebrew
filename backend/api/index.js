@@ -183,6 +183,4 @@ app.get('/', (_, res) => {
   res.send('Hello, Express!');
 });
 
-app.listen(port, () => {
-  log(`Server Running on http://localhost:${port}`);
-});
+module.exports = app;
