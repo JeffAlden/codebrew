@@ -17,7 +17,7 @@ const Signup = () => {
         return;
       }
 
-      const response = await axios.post('http://localhost:3006/customer/signup', { name, email, password });
+      const response = await axios.post('codebrew-ep9m-9y4ghdsqj-jeffalden.vercel.app/customer/signup', { name, email, password });
       const { status, data } = response.data;
 
       if (status === 'Success') {
