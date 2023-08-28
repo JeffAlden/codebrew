@@ -8,7 +8,7 @@ const app = express();
 const port = process.env.PORT || 3006;
 
 app.use(cors({
-  origin: 'codebrew-rv546he6r-jeffalden.vercel.app'
+  origin: 'codebrew-rho.vercel.app'
 }));
 
 
