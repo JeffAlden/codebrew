@@ -1,8 +1,10 @@
 import axios from 'axios';
 
-const baseURL = process.env.REACT_APP_API_URL || 'http://localhost:3006'; // Use your server's port (3006)
+// Use the environment variable if available, otherwise fall back to localhost
+const baseURL = process.env.REACT_APP_API_URL || 'https://express-vercel-app-sigma.vercel.app' || 'http://localhost:3006';
+
 const api = axios.create({
-  baseURL: baseURL
+  baseURL: baseURL,
 });
 
 export default api;
