@@ -40,10 +40,11 @@ const Login = () => {
         }
       }
     } catch (error) {
-      setError('Login failed. Please check your credentials.');
-      toast.error('An error occurred while trying to log in. Please try again later.', { position: 'top-right' });
-    }
-  };
+    setError('Login failed. Please check your credentials.');
+    toast.error(`An error occurred while trying to log in: ${error.response ? error.response.data : 'Unknown error'}`, { position: 'top-right' });
+    console.error('Server Error:', error.response ? error.response.data : error);
+  }
+};
 
 
 
