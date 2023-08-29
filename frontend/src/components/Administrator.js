@@ -21,7 +21,7 @@ const Administrator = () => {
 
         try {
             // Send login request
-            const response = await fetch('http://localhost:3006/customer/login', {
+            const response = await fetch('https://express-vercel-app-sigma.vercel.app/customer/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(credentials)
