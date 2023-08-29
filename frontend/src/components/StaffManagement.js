@@ -57,18 +57,18 @@ const StaffManagement = () => {
 };
 
   const deleteData = (index) => {
-    const staffToDelete = staffMembers[index];
-    api.delete(`/staff/${staffToDelete.id}`)
-      .then(() => {
-        const updatedStaffMembers = [...staffMembers];
-        updatedStaffMembers.splice(index, 1);
-        setStaffMembers(updatedStaffMembers);
-        toast.error('Staff member deleted successfully!');
-      })
-      .catch(() => {
-        toast.error("Error deleting staff member!");
-      });
-  };
+  const staffToDelete = staffMembers[index];
+  api.delete(`/staff/${staffToDelete._id}`) // Used staffToDelete._id
+    .then(() => {
+      const updatedStaffMembers = staffMembers.filter((_, i) => i !== index);
+      setStaffMembers(updatedStaffMembers);
+      toast.error('Staff member deleted successfully!');
+    })
+    .catch(() => {
+      toast.error("Error deleting staff member!");
+    });
+};
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
