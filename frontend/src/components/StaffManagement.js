@@ -58,6 +58,7 @@ const StaffManagement = () => {
 
   const deleteData = (index) => {
   const staffToDelete = staffMembers[index];
+  console.log('Deleting staff with _id:', staffToDelete._id);
   api.delete(`/staff/${staffToDelete._id}`) // Used staffToDelete._id
     .then(() => {
       const updatedStaffMembers = staffMembers.filter((_, i) => i !== index);
