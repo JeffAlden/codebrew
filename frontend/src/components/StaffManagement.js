@@ -43,18 +43,18 @@ const StaffManagement = () => {
   };
 
   const editData = (index) => {
-    const staffToEdit = staffMembers[index];
-    setFormData({
-      id: staffToEdit.id,
-      name: staffToEdit.name,
-      email: staffToEdit.email,
-      phoneNumber: staffToEdit.phoneNumber,
-      address: staffToEdit.address
-    });
-    setIsFormVisible(true);
-    setIsEditing(true);
-    toast.info('Editing staff member. Update the form and save!');
-  };
+  const staffToEdit = staffMembers[index];
+  setFormData({
+    id: staffToEdit._id, //  use _id
+    name: staffToEdit.name,
+    email: staffToEdit.email,
+    phoneNumber: staffToEdit.phoneNumber,
+    address: staffToEdit.address
+  });
+  setIsFormVisible(true);
+  setIsEditing(true);
+  toast.info('Editing staff member. Update the form and save!');
+};
 
   const deleteData = (index) => {
     const staffToDelete = staffMembers[index];
