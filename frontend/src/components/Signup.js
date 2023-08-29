@@ -18,7 +18,7 @@ const Signup = () => {
       }
 
       // Modified the axios POST request URL
-      const response = await axios.post('https://codebrew-ep9m.vercel.app/customer/signup', { name, email, password });
+      const response = await axios.post('https://express-vercel-app-sigma.vercel.app/customer/signup', { name, email, password });
       const { status, data } = response.data;
 
       if (status === 'Success') {
