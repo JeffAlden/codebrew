@@ -20,20 +20,27 @@ const Footer = () => {
               all while sipping on our handcrafted brews. Because at CodeBrew, we believe in blending the aroma of coffee with the essence of community."
               </p>
               <div className="mt-4">
-                <button className="btn btn-floating btn-light btn-lg">
-                  <FontAwesomeIcon icon={faFacebookF} />
-                </button>
-                <button className="btn btn-floating btn-light btn-lg">
-                  <FontAwesomeIcon icon={faDribbble} />
-                </button>
-                <button className="btn btn-floating btn-light btn-lg">
-                  <FontAwesomeIcon icon={faTwitter} />
-                </button>
-                <button className="btn btn-floating btn-light btn-lg">
-                  <FontAwesomeIcon icon={faGooglePlusG} />
-                </button>
-              </div>
-            </div>
+            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+              <button className="btn btn-floating btn-light btn-lg">
+                <FontAwesomeIcon icon={faFacebookF} />
+              </button>
+            </a>
+            <a href="https://dribbble.com" target="_blank" rel="noopener noreferrer">
+              <button className="btn btn-floating btn-light btn-lg">
+                <FontAwesomeIcon icon={faDribbble} />
+              </button>
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+              <button className="btn btn-floating btn-light btn-lg">
+                <FontAwesomeIcon icon={faTwitter} />
+              </button>
+            </a>
+            <a href="https://plus.google.com" target="_blank" rel="noopener noreferrer">
+              <button className="btn btn-floating btn-light btn-lg">
+                <FontAwesomeIcon icon={faGooglePlusG} />
+              </button>
+            </a>
+          </div>
 
             <div className="col-lg-4 col-md-6 mb-4 mb-md-0">
               <h5 className="text-uppercase mb-4 pb-1">Search something</h5>
