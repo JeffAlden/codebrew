@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';  // using useNavigate instead of useHistory
 import './Navbar.css';
 import { useCart } from './CartContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,10 +6,13 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { Link as ScrollLink, animateScroll as scroll } from 'react-scroll';
 import React, { useState, useEffect } from 'react';
 
+
+
 const Navbar = ({ onCartClick }) => {
   const { cartItems, getCartQuantityTotal } = useCart();
   const [totalQuantity, setTotalQuantity] = useState(getCartQuantityTotal());
   const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('isAdminAuthenticated') === 'true');
+  const navigate = useNavigate(); // using useNavigate
   const location = useLocation();
   const isMainPage = location.pathname === '/';
 
@@ -38,28 +41,11 @@ const Navbar = ({ onCartClick }) => {
     scroll.scrollToTop();
   };
 
-  const scrollToSection = (section) => {
-    const element = document.getElementById(section);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const navigate = useNavigate();
-
   const handleClick = (section) => {
-    if (!isMainPage) {
-      navigate('/', { state: { scrollTo: section } });
-    } else {
-      scrollToSection(section);
-    }
+    if (isMainPage) return;
+    navigate('/'); // using navigate
+    setTimeout(() => scroll.scrollTo(section), 0);
   };
-
-  useEffect(() => {
-    if (location.state && location.state.scrollTo) {
-      scrollToSection(location.state.scrollTo);
-    }
-  }, [location.state]);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -90,39 +76,39 @@ const Navbar = ({ onCartClick }) => {
                 Contact Us
               </ScrollLink>
             </li>
-            {/* Auth-related buttons */}
-            {isAuthenticated ? (
-              <li className="nav-item">
-                <button type="button" className="btn btn-outline-primary mx-2" onClick={logout}>Logout</button>
-              </li>
-            ) : (
-              <>
-                <li className="nav-item">
-                  <Link to="/login">
-                    <button type="button" className="btn btn-outline-primary mx-2">Login</button>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="/signup">
-                    <button type="button" className="btn btn-primary mx-2">Sign Up</button>
-                  </Link>
-                </li>
-              </>
-            )}
-            {/* Shopping Cart */}
-            <li className="nav-item d-flex align-items-center">
-              <span onClick={onCartClick} className="nav-link" style={{ cursor: "pointer" }}>
-                <FontAwesomeIcon icon={faShoppingCart} className="mx-2" />
-                {totalQuantity > 0 && (
-                  <span className="badge bg-danger">{totalQuantity}</span>
-                )}
-              </span>
-            </li>
-          </ul>
+                    {/* Auth-related buttons */}
+                    {isAuthenticated ? (
+                        <li className="nav-item">
+                            <button type="button" className="btn btn-outline-primary mx-2" onClick={logout}>Logout</button>
+                        </li>
+                    ) : (
+                        <>
+                            <li className="nav-item">
+                                <Link to="/login">
+                                    <button type="button" className="btn btn-outline-primary mx-2">Login</button>
+                                </Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link to="/signup">
+                                    <button type="button" className="btn btn-primary mx-2">Sign Up</button>
+                                </Link>
+                            </li>
+                        </>
+                    )}
+                    {/* Shopping Cart */}
+                    <li className="nav-item d-flex align-items-center">
+                        <span onClick={onCartClick} className="nav-link" style={{cursor: "pointer"}}>
+                            <FontAwesomeIcon icon={faShoppingCart} className="mx-2" />
+                            {totalQuantity > 0 && (
+                                <span className="badge bg-danger">{totalQuantity}</span>
+                            )}
+                        </span>
+                    </li>
+                </ul>
+            </div>
         </div>
-      </div>
     </nav>
-  );
+);
 };
 
 export default Navbar;
