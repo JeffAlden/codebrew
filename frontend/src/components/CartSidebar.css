@@ -16,7 +16,7 @@
     right: 0;
     top: 80px;
     padding: 20px;
-    background-color: transparent;
+    background-color: #f7f7f7;
     border-left: 1px solid #e0e0e0;
     overflow-y: auto;
     z-index: 1001;
