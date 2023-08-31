@@ -31,10 +31,24 @@
 }
 
 .item button {
-    background-color: #1C1F25;
-    color: #fff;
-    width: 100%;
+    background-color: transparent;
+    /* Change the background color to transparent */
+    color: #1C1F25;
+    border: 2px solid #a3a9b1;
+    /* Add a border to create a button-like appearance */
     padding: 10px;
-    border: none;
     cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Add transition effects */
+    width: 100%;
+}
+
+/* Apply the same hover effect as navigation links */
+.item button:hover {
+    background-color: #007bff;
+    /* Hover background color (blue) */
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 4px 4px 8px #b8b8b8, -4px -4px 8px #f8f8f8;
+    transform: scale(0.98);
 }
