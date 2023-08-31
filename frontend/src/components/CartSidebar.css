@@ -11,32 +11,40 @@
 
 .cart-sidebar {
     width: 300px;
-    height: calc(100% - 120px);  /* Subtracting the navbar's height and some space for the bottom */
+    height: calc(100% - 120px);
     position: fixed;
     right: 0;
-    top: 80px;  /* Offset for the navbar */
+    top: 80px;
     padding: 20px;
     background-color: #f7f7f7;
     border-left: 1px solid #e0e0e0;
     overflow-y: auto;
-    z-index: 1001;  /* Ensure it's above the overlay */
-    padding-bottom: 200px;  /* Adjusted for visual balance */
+    z-index: 1001;
+    padding-bottom: 200px;
+    border: 2px solid #a3a9b1;
 }
 
 /* Close button styling */
-.close-sidebar-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
+.close-sidebar-btn,
+.clear-cart-btn,
+.checkout-btn {
+    background-color: transparent;
+    color: #1C1F25;
+    border: 2px solid #4792f3;
+    padding: 10px;
     cursor: pointer;
-    color: #555;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    width: 100%;
 }
 
-.close-sidebar-btn:hover {
-    color: #333;
+.close-sidebar-btn:hover,
+.clear-cart-btn:hover,
+.checkout-btn:hover {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 4px 4px 8px #b8b8b8, -4px -4px 8px #f8f8f8;
+    transform: scale(0.98);
 }
 
 .cart-item {
@@ -83,7 +91,7 @@
 }
 
 .adjust-quantity > button:first-child {
-    margin-right: 10px; /* spacing between the minus button and the quantity display */
+    margin-right: 10px;
 }
 
 .cart-item button:hover {
@@ -93,9 +101,9 @@
 
 .cart-summary {
     position: fixed;
-    bottom: 60px; /* Adjust this to maintain the visual balance at the bottom */
-    width: 260px;  /* 300px minus the side paddings */
-    right: 20px;  /* Padding from the right */
+    bottom: 60px;
+    width: 260px;
+    right: 20px;
     background: #f7f7f7;
 }
 
@@ -116,21 +124,31 @@
     transition: 0.3s;
 }
 
-.clear-cart-btn {
+/* .clear-cart-btn {
     background-color: #e74c3c;
-}
+} */
 
 .checkout-btn {
-    background-color: #007BFF;
+    /* background-color: #007BFF; */
+    background-color: transparent; /* Change the background color to transparent */
+    color: #1C1F25;
+    border: 2px solid #a3a9b1; /* Add a border to create a button-like appearance */
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Add transition effects */
+    width: 100%;
 }
 
-.clear-cart-btn:hover {
+/* .clear-cart-btn:hover {
     background-color: #e53935;
-}
+} */
 
 .checkout-btn:hover {
-    background-color: #0056b3;
-    border-color: #003c7a;
+    background-color: #007bff; /* Hover background color (blue) */
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 4px 4px 8px #b8b8b8, -4px -4px 8px #f8f8f8;
+    transform: scale(0.98);
 }
 
 .close-clear-buttons {
@@ -141,16 +159,21 @@
 }
 
 .close-clear-buttons button {
-    width: 48%;
-    border-radius: 4px;
+    background-color: transparent; /* Change the background color to transparent */
+    color: #1C1F25;
+    border: 2px solid #a3a9b1; /* Add a border to create a button-like appearance */
+    padding: 10px;
     cursor: pointer;
-    background-color: #007BFF;
-    color: #fff;
-    border: 2px solid #007BFF;
-    transition: 0.3s;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Add transition effects */
+    width: 100%;
 }
 
 .close-clear-buttons button:hover {
-    background-color: #0056b3;
-    border-color: #003c7a;
+    background-color: #007bff; /* Hover background color (blue) */
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 4px 4px 8px #b8b8b8, -4px -4px 8px #f8f8f8;
+    transform: scale(0.98);
 }
+
+
