@@ -79,3 +79,45 @@ body {
 }
 
 
+/* Style for About link */
+.nav-link.text-nowrap[name="about"]:hover {
+  background-color: #007bff; /* Hover background color (blue) */
+  color: #fff; /* Hover text color */
+  border-radius: 5px; /* Same border radius as login and signup */
+  box-shadow: 4px 4px 8px #b8b8b8, -4px -4px 8px #f8f8f8; /* Hover box-shadow */
+  transform: scale(0.98); /* Slightly reduce size on hover */
+}
+
+/* Style for Services link */
+.nav-link.text-nowrap[name="services"]:hover {
+  background-color: #007bff; /* Hover background color (blue) */
+  color: #fff;
+  border-radius: 5px;
+  box-shadow: 4px 4px 8px #b8b8b8, -4px -4px 8px #f8f8f8;
+  transform: scale(0.98);
+}
+
+/* Style for Products link */
+.nav-link.text-nowrap[name="products"]:hover {
+  background-color: #007bff; /* Hover background color (blue) */
+  color: #fff;
+  border-radius: 5px;
+  box-shadow: 4px 4px 8px #b8b8b8, -4px -4px 8px #f8f8f8;
+  transform: scale(0.98);
+}
+
+/* Style for Contact Us link */
+.nav-link.text-nowrap[name="contact"]:hover {
+  background-color: #007bff; /* Hover background color (blue) */
+  color: #fff;
+  border-radius: 5px;
+  box-shadow: 4px 4px 8px #b8b8b8, -4px -4px 8px #f8f8f8;
+  transform: scale(0.98);
+}
+
+
+
+
+
+
+
