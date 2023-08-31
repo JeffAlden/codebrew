@@ -93,19 +93,24 @@ const products = [
 
 const ProductList = () => {
     const { addItem } = useCart();
-
+  
     return (
-        <div className={styles.list}>
-            {products.map(product => (
-                <div key={product.id} className={styles.item}>
-                    <img src={product.image} alt={product.name} />
-                    <div className={styles.title}>{product.name}</div>
-                    <div className={styles.price}>₱{product.price.toLocaleString()}</div>
-                    <button onClick={() => addItem(product)}>Add To Cart</button>
-                </div>
-            ))}
-        </div>
+      <div className={styles.list}>
+        {products.map(product => (
+          <div key={product.id} className={styles.item}>
+            <img src={product.image} alt={product.name} />
+            <div className={styles.title}>{product.name}</div>
+            <div className={styles.price}>₱{product.price.toLocaleString()}</div>
+            <button
+              className={styles['nav-link-style']} // Apply the new class
+              onClick={() => addItem(product)}
+            >
+              Add To Cart
+            </button>
+          </div>
+        ))}
+      </div>
     );
-};
-
-export default ProductList;
+  };
+  
+  export default ProductList;
