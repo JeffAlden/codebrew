@@ -10,7 +10,6 @@ const Navbar = ({ onCartClick }) => {
   const { cartItems, getCartQuantityTotal } = useCart();
   const [totalQuantity, setTotalQuantity] = useState(getCartQuantityTotal());
   const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('isAdminAuthenticated') === 'true');
-  const navigate = useNavigate();
   const location = useLocation();
   const isMainPage = location.pathname === '/';
 
@@ -40,21 +39,27 @@ const Navbar = ({ onCartClick }) => {
   };
 
   const scrollToSection = (section) => {
-    if (section === 'about') {
-      scroll.scrollToTop();
-    } else {
-      scroll.scrollTo(section);
+    const element = document.getElementById(section);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
+  const navigate = useNavigate();
+
   const handleClick = (section) => {
     if (!isMainPage) {
-      navigate('/');
-      setTimeout(() => scrollToSection(section), 0);
+      navigate('/', { state: { scrollTo: section } });
     } else {
       scrollToSection(section);
     }
   };
+
+  useEffect(() => {
+    if (location.state && location.state.scrollTo) {
+      scrollToSection(location.state.scrollTo);
+    }
+  }, [location.state]);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -85,39 +90,39 @@ const Navbar = ({ onCartClick }) => {
                 Contact Us
               </ScrollLink>
             </li>
-                    {/* Auth-related buttons */}
-                    {isAuthenticated ? (
-                        <li className="nav-item">
-                            <button type="button" className="btn btn-outline-primary mx-2" onClick={logout}>Logout</button>
-                        </li>
-                    ) : (
-                        <>
-                            <li className="nav-item">
-                                <Link to="/login">
-                                    <button type="button" className="btn btn-outline-primary mx-2">Login</button>
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link to="/signup">
-                                    <button type="button" className="btn btn-primary mx-2">Sign Up</button>
-                                </Link>
-                            </li>
-                        </>
-                    )}
-                    {/* Shopping Cart */}
-                    <li className="nav-item d-flex align-items-center">
-                        <span onClick={onCartClick} className="nav-link" style={{cursor: "pointer"}}>
-                            <FontAwesomeIcon icon={faShoppingCart} className="mx-2" />
-                            {totalQuantity > 0 && (
-                                <span className="badge bg-danger">{totalQuantity}</span>
-                            )}
-                        </span>
-                    </li>
-                </ul>
-            </div>
+            {/* Auth-related buttons */}
+            {isAuthenticated ? (
+              <li className="nav-item">
+                <button type="button" className="btn btn-outline-primary mx-2" onClick={logout}>Logout</button>
+              </li>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <Link to="/login">
+                    <button type="button" className="btn btn-outline-primary mx-2">Login</button>
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/signup">
+                    <button type="button" className="btn btn-primary mx-2">Sign Up</button>
+                  </Link>
+                </li>
+              </>
+            )}
+            {/* Shopping Cart */}
+            <li className="nav-item d-flex align-items-center">
+              <span onClick={onCartClick} className="nav-link" style={{ cursor: "pointer" }}>
+                <FontAwesomeIcon icon={faShoppingCart} className="mx-2" />
+                {totalQuantity > 0 && (
+                  <span className="badge bg-danger">{totalQuantity}</span>
+                )}
+              </span>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
-);
+  );
 };
 
 export default Navbar;
