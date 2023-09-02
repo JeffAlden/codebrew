@@ -8,18 +8,16 @@ import api from './api';
 const StaffManagement = () => {
   const [staffMembers, setStaffMembers] = useState([]);
   const [isFormVisible, setIsFormVisible] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false); // Added
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phoneNumber: '',
-    address: '',
+    address: ''
   });
 
   const [currentStaff, setCurrentStaff] = useState(null);
-
   const location = useLocation();
-
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -35,24 +33,9 @@ const StaffManagement = () => {
       .catch(error => console.error('Error fetching staff:', error));
   };
 
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-
-  const openAddForm = () => {
-    setIsFormVisible(true);
-    setIsEditing(false);
-    setFormData({
-      name: '',
-      email: '',
-      phoneNumber: '',
-      address: '',
-    });
-  };
-
   const viewData = (index) => {
     setCurrentStaff(staffMembers[index]);
-    toggleModal();
+    setIsModalVisible(true); // Show the modal
     toast.info('Viewing staff member details');
   };
 
@@ -63,16 +46,16 @@ const StaffManagement = () => {
       name: staffToEdit.name,
       email: staffToEdit.email,
       phoneNumber: staffToEdit.phoneNumber,
-      address: staffToEdit.address,
+      address: staffToEdit.address
     });
     setIsFormVisible(true);
     setIsEditing(true);
-    toggleModal();
     toast.info('Editing staff member. Update the form and save!');
   };
 
   const deleteData = (index) => {
     const staffToDelete = staffMembers[index];
+    console.log('Deleting staff with _id:', staffToDelete._id);
     api.delete(`/staff/${staffToDelete._id}`)
       .then(() => {
         const updatedStaffMembers = staffMembers.filter((_, i) => i !== index);
@@ -100,7 +83,7 @@ const StaffManagement = () => {
           name: '',
           email: '',
           phoneNumber: '',
-          address: '',
+          address: ''
         });
         setIsFormVisible(false);
         setIsEditing(false);
@@ -118,7 +101,7 @@ const StaffManagement = () => {
           name: '',
           email: '',
           phoneNumber: '',
-          address: '',
+          address: ''
         });
         setIsFormVisible(false);
         toast.success('Staff member added successfully!');
@@ -131,66 +114,93 @@ const StaffManagement = () => {
 
   return (
     <div className="container mt-5">
+      {/* Navigation */}
       <nav>
         {/* Navigation Links */}
       </nav>
+      {/* Title */}
       <h1 className="text-center mb-4">Staff Management</h1>
-      <button className="btn btn-primary mb-4" onClick={openAddForm}>Add Data</button>
+      {/* Add Data Button */}
+      <button className="btn btn-primary mb-4" onClick={() => { setIsFormVisible(true); setIsEditing(false); setFormData({ name: '', email: '', phoneNumber: '', address: '' }); }}>Add Data</button>
+      {/* Staff Table */}
       <div className="table-responsive">
-        {/* Staff Table */}
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th className="text-center">ID</th>
+              <th className="text-center">Name</th>
+              <th className="text-center">Email</th>
+              <th className="text-center">Phone Number</th>
+              <th className="text-center">Address</th>
+              <th className="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {staffMembers.map((staff, index) => (
+              <tr key={staff._id}>
+                <td className="text-center">{staff._id}</td>
+                <td className="text-center">{staff.name}</td>
+                <td className="text-center">{staff.email}</td>
+                <td className="text-center">{staff.phoneNumber}</td>
+                <td className="text-center">{staff.address}</td>
+                <td className="text-center">
+                  <button style={{ backgroundColor: '#0DCAF0', borderColor: '#0DCAF0', color: '#000000' }} className="btn mr-2" onClick={() => viewData(index)}>View</button>
+                  <button style={{ backgroundColor: '#FFC107', borderColor: '#FFC107', color: '#000000' }} className="btn mr-2" onClick={() => editData(index)}>Edit</button>
+                  <button className="btn btn-danger" onClick={() => deleteData(index)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
+      {/* Back to Home Button */}
       <Link to="/" className="btn btn-secondary mb-4 float-end">Back to Home</Link>
 
+      {/* Add/Edit Data Form */}
       {isFormVisible && (
         <div className="container mt-5">
-          {/* Add/Edit Data Form */}
+          <h3>{isEditing ? 'Edit' : 'Add'} Data</h3>
+          <form onSubmit={handleSubmit}>
+            {['name', 'email', 'phoneNumber', 'address'].map((field, idx) => (
+              <div key={idx} className="form-group">
+                <label htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}:</label>
+                <input
+                  type={field === 'email' ? 'email' : 'text'}
+                  className="form-control"
+                  id={field}
+                  name={field}
+                  value={formData[field]}
+                  onChange={(e) => setFormData(prev => ({ ...prev, [field]: e.target.value }))}
+                  required
+                />
+              </div>
+            ))}
+            <button type="submit" className="btn btn-success mr-2">Save</button>
+            <button type="button" className="btn btn-secondary" onClick={() => setIsFormVisible(false)}>Cancel</button>
+          </form>
         </div>
       )}
 
+      {/* View/Edit Staff Modal */}
       {isModalVisible && currentStaff && (
         <div className="modal" tabIndex="-1" style={{ display: 'block' }}>
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Staff Details</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={toggleModal}
-                  aria-label="Close"
-                ></button>
+                <h5 className="modal-title">{isEditing ? 'Edit' : 'View'} Staff Details</h5>
+                <button type="button" className="btn-close" onClick={() => setIsModalVisible(false)} aria-label="Close"></button>
               </div>
               <div className="modal-body">
-                <p><strong>ID:</strong> {currentStaff.id}</p>
-                {/* Staff Details */}
+                <p><strong>ID:</strong> {currentStaff._id}</p>
+                <p><strong>Name:</strong> {currentStaff.name}</p>
+                <p><strong>Email:</strong> {currentStaff.email}</p>
+                <p><strong>Phone:</strong> {currentStaff.phoneNumber}</p>
+                <p><strong>Address:</strong> {currentStaff.address}</p>
               </div>
               <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={toggleModal}
-                >
-                  Close
-                </button>
+                <button type="button" className="btn btn-secondary" onClick={() => setIsModalVisible(false)}>Close</button>
                 {!isEditing && (
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() => {
-                      setIsFormVisible(true);
-                      setIsEditing(true);
-                      toggleModal();
-                      setFormData({
-                        id: currentStaff._id,
-                        name: currentStaff.name,
-                        email: currentStaff.email,
-                        phoneNumber: currentStaff.phoneNumber,
-                        address: currentStaff.address,
-                      });
-                    }}
-                  >
-                    Edit
-                  </button>
+                  <button type="button" className="btn btn-primary" onClick={() => { setIsFormVisible(true); setIsEditing(true); setFormData({ id: currentStaff._id, name: currentStaff.name, email: currentStaff.email, phoneNumber: currentStaff.phoneNumber, address: currentStaff.address }); setIsModalVisible(false); }}>Edit</button>
                 )}
               </div>
             </div>
@@ -201,6 +211,6 @@ const StaffManagement = () => {
       <ToastContainer />
     </div>
   );
-};
+}
 
 export default StaffManagement;
