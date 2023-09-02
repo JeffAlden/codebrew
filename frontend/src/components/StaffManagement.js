@@ -8,26 +8,17 @@ import api from './api';
 
 const StaffManagement = () => {
   const [staffMembers, setStaffMembers] = useState([]);
-  const [isFormVisible, setIsFormVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [formData, setFormData] = useState({
+    id: '',
     name: '',
     email: '',
     phoneNumber: '',
     address: ''
   });
-  
-  const [currentStaff, setCurrentStaff] = useState(null);
-  
-  const viewData = (index) => {
-    setCurrentStaff(staffMembers[index]);
-    setIsModalVisible(true);
-    toast.info('Viewing staff member details');
-  };
+  const [modalTitle, setModalTitle] = useState('');
 
   const location = useLocation();
-
-  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (location.state && location.state.loggedIn) {
@@ -42,80 +33,68 @@ const StaffManagement = () => {
       .catch(error => console.error('Error fetching staff:', error));
   };
 
-  const editData = (index) => {
-  const staffToEdit = staffMembers[index];
-  setFormData({
-    id: staffToEdit._id, //  use _id
-    name: staffToEdit.name,
-    email: staffToEdit.email,
-    phoneNumber: staffToEdit.phoneNumber,
-    address: staffToEdit.address
-  });
-  setIsFormVisible(true);
-  setIsEditing(true);
-  toast.info('Editing staff member. Update the form and save!');
-};
+  const openModal = (title, index = null) => {
+    setModalTitle(title);
+    if (index !== null) {
+      const staff = staffMembers[index];
+      setFormData({
+        id: staff._id,
+        name: staff.name,
+        email: staff.email,
+        phoneNumber: staff.phoneNumber,
+        address: staff.address
+      });
+    } else {
+      setFormData({
+        id: '',
+        name: '',
+        email: '',
+        phoneNumber: '',
+        address: ''
+      });
+    }
+    setIsModalVisible(true);
+  };
 
   const deleteData = (index) => {
-  const staffToDelete = staffMembers[index];
-  console.log('Deleting staff with _id:', staffToDelete._id);
-  api.delete(`/staff/${staffToDelete._id}`) // Used staffToDelete._id
-    .then(() => {
-      const updatedStaffMembers = staffMembers.filter((_, i) => i !== index);
-      setStaffMembers(updatedStaffMembers);
-      toast.error('Staff member deleted successfully!');
-    })
-    .catch(() => {
-      toast.error("Error deleting staff member!");
-    });
-};
-
+    const staffToDelete = staffMembers[index];
+    api.delete(`/staff/${staffToDelete._id}`)
+      .then(() => {
+        const updatedStaffMembers = staffMembers.filter((_, i) => i !== index);
+        setStaffMembers(updatedStaffMembers);
+        toast.success('Staff member deleted successfully!');
+      })
+      .catch(() => {
+        toast.error('Error deleting staff member.');
+      });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    if (isEditing) {
+    if (formData.id) {
       try {
-        const updatedStaffMember = { ...formData };
-        const response = await api.put(`/staff/${updatedStaffMember.id}`, updatedStaffMember);
+        const response = await api.put(`/staff/${formData.id}`, formData);
         setStaffMembers(prevStaffMembers => 
           prevStaffMembers.map(staff => 
-            staff.id === updatedStaffMember.id ? response.data.data : staff
+            staff._id === formData.id ? response.data : staff
           )
         );
-        setFormData({
-          name: '',
-          email: '',
-          phoneNumber: '',
-          address: ''
-        });
-        setIsFormVisible(false);
-        setIsEditing(false);
         toast.success('Staff member updated successfully!');
       } catch (error) {
-        console.error('Error updating staff:', error);
-        toast.error('Failed to update staff member. Please try again.');
+        toast.error('Failed to update staff member.');
       }
     } else {
       try {
-        const newStaffMember = { ...formData };
-        const response = await api.post('/staff', newStaffMember);
-        setStaffMembers(prevStaffMembers => [...prevStaffMembers, response.data.data]);
-        setFormData({
-          name: '',
-          email: '',
-          phoneNumber: '',
-          address: ''
-        });
-        setIsFormVisible(false);
+        const response = await api.post('/staff', formData);
+        setStaffMembers([...staffMembers, response.data]);
         toast.success('Staff member added successfully!');
       } catch (error) {
-        console.error('Error adding staff:', error);
-        toast.error('Failed to add staff member. Please try again.');
+        toast.error('Failed to add staff member.');
       }
     }
+    setIsModalVisible(false);
   };
-
+  
   return (
     <div className="container mt-5">
       {/* Navigation */}
@@ -137,86 +116,69 @@ const StaffManagement = () => {
       <h1 className="text-center mb-4">Staff Management</h1>
 
       {/* Add Data Button */}
-      <button className="btn btn-primary mb-4" onClick={() => { setIsFormVisible(true); setIsEditing(false); setFormData({ name: '', email: '', phoneNumber: '', address: '' }); }}>Add Data</button>
+      <button className="btn btn-primary mb-4" onClick={() => openModal('Add Data')}>Add Data</button>
 
       {/* Staff Table */}
-      <div className="table-responsive">
-        <table className="table table-bordered">
-          <thead>
-            <tr>
-              <th className="text-center">ID</th>
-              <th className="text-center">Name</th>
-              <th className="text-center">Email</th>
-              <th className="text-center">Phone Number</th>
-              <th className="text-center">Address</th>
-              <th className="text-center">Actions</th>
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Address</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {staffMembers.map((staff, index) => (
+            <tr key={staff._id}>
+              <td>{staff._id}</td>
+              <td>{staff.name}</td>
+              <td>{staff.email}</td>
+              <td>{staff.phoneNumber}</td>
+              <td>{staff.address}</td>
+              <td>
+                <button className="btn btn-info" onClick={() => openModal('View Data', index)}>View</button>
+                <button className="btn btn-warning" onClick={() => openModal('Edit Data', index)}>Edit</button>
+                <button className="btn btn-danger" onClick={() => deleteData(index)}>Delete</button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {staffMembers.map((staff, index) => (
-              <tr key={staff._id}>
-                <td className="text-center">{staff.id}</td>
-                <td className="text-center">{staff.name}</td>
-                <td className="text-center">{staff.email}</td>
-                <td className="text-center">{staff.phoneNumber}</td>
-                <td className="text-center">{staff.address}</td>
-                <td className="text-center">
-                  <button style={{ backgroundColor: '#0DCAF0', borderColor: '#0DCAF0', color: '#000000' }} className="btn mr-2" onClick={() => viewData(index)}>View</button>
-                  <button style={{ backgroundColor: '#FFC107', borderColor: '#FFC107', color: '#000000' }} className="btn mr-2" onClick={() => editData(index)}>Edit</button>
-                  <button className="btn btn-danger" onClick={() => deleteData(index)}>Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
 
       {/* Back to Home Button */}
       <Link to="/" className="btn btn-secondary mb-4 float-end">Back to Home</Link>
 
-      {/* Add/Edit Data Form */}
-      {isFormVisible && (
-        <div className="container mt-5">
-          <h3>Add Data</h3>
-          <form onSubmit={handleSubmit}>
-            {['name', 'email', 'phoneNumber', 'address'].map((field, idx) => (
-              <div key={idx} className="form-group">
-                <label htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}:</label>
-                <input
-                  type={field === 'email' ? 'email' : 'text'}
-                  className="form-control"
-                  id={field}
-                  name={field}
-                  value={formData[field]}
-                  onChange={(e) => setFormData(prev => ({ ...prev, [field]: e.target.value }))}
-                  required
-                />
-              </div>
-            ))}
-            <button type="submit" className="btn btn-success mr-2">Save</button>
-            <button type="button" className="btn btn-secondary" onClick={() => setIsFormVisible(false)}>Cancel</button>
-          </form>
-        </div>
-      )}
-
-      {/* View Staff Modal */}
-      {isModalVisible && currentStaff && (
+      {/* Add/Edit/View Data Modal */}
+      {isModalVisible && (
         <div className="modal" tabIndex="-1" style={{ display: 'block' }}>
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Staff Details</h5>
+                <h5 className="modal-title">{modalTitle}</h5>
                 <button type="button" className="btn-close" onClick={() => setIsModalVisible(false)} aria-label="Close"></button>
               </div>
               <div className="modal-body">
-                <p><strong>ID:</strong> {currentStaff.id}</p>
-                <p><strong>Name:</strong> {currentStaff.name}</p>
-                <p><strong>Email:</strong> {currentStaff.email}</p>
-                <p><strong>Phone:</strong> {currentStaff.phoneNumber}</p>
-                <p><strong>Address:</strong> {currentStaff.address}</p>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setIsModalVisible(false)}>Close</button>
+                <form onSubmit={handleSubmit}>
+                  {['name', 'email', 'phoneNumber', 'address'].map((field, idx) => (
+                    <div key={idx} className="form-group">
+                      <label htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}:</label>
+                      <input
+                        type={field === 'email' ? 'email' : 'text'}
+                        className="form-control"
+                        id={field}
+                        name={field}
+                        value={formData[field]}
+                        onChange={(e) => setFormData(prev => ({ ...prev, [field]: e.target.value }))}
+                        required
+                      />
+                    </div>
+                  ))}
+                  <button type="submit" className="btn btn-success">Save</button>
+                  <button type="button" className="btn btn-secondary" onClick={() => setIsModalVisible(false)}>Cancel</button>
+                </form>
               </div>
             </div>
           </div>
@@ -226,6 +188,6 @@ const StaffManagement = () => {
       <ToastContainer />
     </div>
   );
-}
+};
 
 export default StaffManagement;
