@@ -104,14 +104,13 @@ const StaffManagement = () => {
   };
 
   const clearFormData = () => {
-    setFormData({
-      _id: '',
-      name: '',
-      email: '',
-      phoneNumber: '',
-      address: ''
-    });
-  };
+  setFormData({
+    name: '',
+    email: '',
+    phoneNumber: '',
+    address: ''
+  });
+};
 
   return (
     <div className="container mt-5">
