@@ -5,20 +5,28 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useLocation } from 'react-router-dom';
 import api from './api';
 
+
 const StaffManagement = () => {
   const [staffMembers, setStaffMembers] = useState([]);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [formData, setFormData] = useState({
-    id: '',
     name: '',
     email: '',
     phoneNumber: '',
     address: ''
   });
-
+  
   const [currentStaff, setCurrentStaff] = useState(null);
+  
+  const viewData = (index) => {
+    setCurrentStaff(staffMembers[index]);
+    setIsModalVisible(true);
+    toast.info('Viewing staff member details');
+  };
+
   const location = useLocation();
+
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -34,40 +42,34 @@ const StaffManagement = () => {
       .catch(error => console.error('Error fetching staff:', error));
   };
 
-  const viewData = (index) => {
-    setCurrentStaff(staffMembers[index]);
-    setIsModalVisible(true);
-    toast.info('Viewing staff member details');
-  };
-
   const editData = (index) => {
-    const staffToEdit = staffMembers[index];
-    setFormData({
-      id: staffToEdit._id,
-      name: staffToEdit.name,
-      email: staffToEdit.email,
-      phoneNumber: staffToEdit.phoneNumber,
-      address: staffToEdit.address
-    });
-    setIsFormVisible(true);
-    setIsEditing(true);
-    setIsModalVisible(true);
-    toast.info('Editing staff member. Update the form and save!');
-  };
+  const staffToEdit = staffMembers[index];
+  setFormData({
+    id: staffToEdit._id, //  use _id
+    name: staffToEdit.name,
+    email: staffToEdit.email,
+    phoneNumber: staffToEdit.phoneNumber,
+    address: staffToEdit.address
+  });
+  setIsFormVisible(true);
+  setIsEditing(true);
+  toast.info('Editing staff member. Update the form and save!');
+};
 
   const deleteData = (index) => {
-    const staffToDelete = staffMembers[index];
-    console.log('Deleting staff with _id:', staffToDelete._id);
-    api.delete(`/staff/${staffToDelete._id}`)
-      .then(() => {
-        const updatedStaffMembers = staffMembers.filter((_, i) => i !== index);
-        setStaffMembers(updatedStaffMembers);
-        toast.error('Staff member deleted successfully!');
-      })
-      .catch(() => {
-        toast.error("Error deleting staff member!");
-      });
-  };
+  const staffToDelete = staffMembers[index];
+  console.log('Deleting staff with _id:', staffToDelete._id);
+  api.delete(`/staff/${staffToDelete._id}`) // Used staffToDelete._id
+    .then(() => {
+      const updatedStaffMembers = staffMembers.filter((_, i) => i !== index);
+      setStaffMembers(updatedStaffMembers);
+      toast.error('Staff member deleted successfully!');
+    })
+    .catch(() => {
+      toast.error("Error deleting staff member!");
+    });
+};
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -76,12 +78,17 @@ const StaffManagement = () => {
       try {
         const updatedStaffMember = { ...formData };
         const response = await api.put(`/staff/${updatedStaffMember.id}`, updatedStaffMember);
-        setStaffMembers(prevStaffMembers =>
-          prevStaffMembers.map(staff =>
+        setStaffMembers(prevStaffMembers => 
+          prevStaffMembers.map(staff => 
             staff.id === updatedStaffMember.id ? response.data.data : staff
           )
         );
-        clearFormData();
+        setFormData({
+          name: '',
+          email: '',
+          phoneNumber: '',
+          address: ''
+        });
         setIsFormVisible(false);
         setIsEditing(false);
         toast.success('Staff member updated successfully!');
@@ -94,7 +101,12 @@ const StaffManagement = () => {
         const newStaffMember = { ...formData };
         const response = await api.post('/staff', newStaffMember);
         setStaffMembers(prevStaffMembers => [...prevStaffMembers, response.data.data]);
-        clearFormData();
+        setFormData({
+          name: '',
+          email: '',
+          phoneNumber: '',
+          address: ''
+        });
         setIsFormVisible(false);
         toast.success('Staff member added successfully!');
       } catch (error) {
@@ -104,26 +116,29 @@ const StaffManagement = () => {
     }
   };
 
-  const clearFormData = () => {
-    setFormData({
-      id: '',
-      name: '',
-      email: '',
-      phoneNumber: '',
-      address: ''
-    });
-  };
-
   return (
     <div className="container mt-5">
       {/* Navigation */}
       <nav>
-        {/* Navigation Links */}
+        <ul className="nav nav-tabs mb-3">
+          <li className="nav-item">
+            <Link className="nav-link active" to="/staff-management">Staff Management</Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/signup-admin">Sign Up Admin</Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/contact-us-admin">Contact Us Admin</Link>
+          </li>
+        </ul>
       </nav>
+
       {/* Title */}
       <h1 className="text-center mb-4">Staff Management</h1>
+
       {/* Add Data Button */}
-      <button className="btn btn-primary mb-4" onClick={() => { setIsFormVisible(true); setIsEditing(false); clearFormData(); }}>Add Data</button>
+      <button className="btn btn-primary mb-4" onClick={() => { setIsFormVisible(true); setIsEditing(false); setFormData({ name: '', email: '', phoneNumber: '', address: '' }); }}>Add Data</button>
+
       {/* Staff Table */}
       <div className="table-responsive">
         <table className="table table-bordered">
@@ -140,7 +155,7 @@ const StaffManagement = () => {
           <tbody>
             {staffMembers.map((staff, index) => (
               <tr key={staff._id}>
-                <td className="text-center">{staff._id}</td>
+                <td className="text-center">{staff.id}</td>
                 <td className="text-center">{staff.name}</td>
                 <td className="text-center">{staff.email}</td>
                 <td className="text-center">{staff.phoneNumber}</td>
@@ -155,20 +170,46 @@ const StaffManagement = () => {
           </tbody>
         </table>
       </div>
+
       {/* Back to Home Button */}
       <Link to="/" className="btn btn-secondary mb-4 float-end">Back to Home</Link>
 
-      {/* View/Edit Staff Modal */}
+      {/* Add/Edit Data Form */}
+      {isFormVisible && (
+        <div className="container mt-5">
+          <h3>Add Data</h3>
+          <form onSubmit={handleSubmit}>
+            {['name', 'email', 'phoneNumber', 'address'].map((field, idx) => (
+              <div key={idx} className="form-group">
+                <label htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}:</label>
+                <input
+                  type={field === 'email' ? 'email' : 'text'}
+                  className="form-control"
+                  id={field}
+                  name={field}
+                  value={formData[field]}
+                  onChange={(e) => setFormData(prev => ({ ...prev, [field]: e.target.value }))}
+                  required
+                />
+              </div>
+            ))}
+            <button type="submit" className="btn btn-success mr-2">Save</button>
+            <button type="button" className="btn btn-secondary" onClick={() => setIsFormVisible(false)}>Cancel</button>
+          </form>
+        </div>
+      )}
+
+      {/* View Staff Modal */}
       {isModalVisible && currentStaff && (
         <div className="modal" tabIndex="-1" style={{ display: 'block' }}>
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">{isEditing ? 'Edit' : 'View'} Staff Details</h5>
+                <h5 className="modal-title">Staff Details</h5>
                 <button type="button" className="btn-close" onClick={() => setIsModalVisible(false)} aria-label="Close"></button>
               </div>
               <div className="modal-body">
-                <p><strong>ID:</strong> {currentStaff._id}</p>
+                <p><strong>ID:</strong> {currentStaff.id}</p>
                 <p><strong>Name:</strong> {currentStaff.name}</p>
                 <p><strong>Email:</strong> {currentStaff.email}</p>
                 <p><strong>Phone:</strong> {currentStaff.phoneNumber}</p>
@@ -176,79 +217,6 @@ const StaffManagement = () => {
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={() => setIsModalVisible(false)}>Close</button>
-                {!isEditing && (
-                  <button type="button" className="btn btn-primary" onClick={() => { setIsFormVisible(true); setIsEditing(true); setFormData({ id: currentStaff._id, name: currentStaff.name, email: currentStaff.email, phoneNumber: currentStaff.phoneNumber, address: currentStaff.address }); setIsModalVisible(false); }}>Edit</button>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Add/Edit Data Form */}
-      {isFormVisible && (
-        <div className="modal" tabIndex="-1" style={{ display: 'block' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">{isEditing ? 'Edit' : 'Add'} Data</h5>
-                <button type="button" className="btn-close" onClick={() => { setIsFormVisible(false); clearFormData(); setIsEditing(false); }} aria-label="Close"></button>
-              </div>
-              <div className="modal-body">
-                <form onSubmit={handleSubmit}>
-                  <div className="form-group">
-                    <label htmlFor="name">Name:</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="email">Email:</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="phoneNumber">Phone Number:</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="phoneNumber"
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
-                      onChange={(e) => setFormData(prev => ({ ...prev, phoneNumber: e.target.value }))}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="address">Address:</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="address"
-                      name="address"
-                      value={formData.address}
-                      onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-                      required
-                    />
-                  </div>
-                  <div className="modal-footer">
-                    <button type="submit" className="btn btn-success">{isEditing ? 'Save' : 'Add'}</button>
-                    <button type="button" className="btn btn-secondary" onClick={() => { setIsFormVisible(false); clearFormData(); setIsEditing(false); }}>Cancel</button>
-                  </div>
-                </form>
               </div>
             </div>
           </div>
