@@ -10,7 +10,6 @@ const StaffManagement = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [formData, setFormData] = useState({
-    id: '',
     name: '',
     email: '',
     phoneNumber: '',
@@ -43,7 +42,7 @@ const StaffManagement = () => {
   const editData = (index) => {
     const staffToEdit = staffMembers[index];
     setFormData({
-      id: staffToEdit._id,
+      _id: staffToEdit._id,
       name: staffToEdit.name,
       email: staffToEdit.email,
       phoneNumber: staffToEdit.phoneNumber,
@@ -75,10 +74,10 @@ const StaffManagement = () => {
     if (isEditing) {
       try {
         const updatedStaffMember = { ...formData };
-        const response = await api.put(`/staff/${updatedStaffMember.id}`, updatedStaffMember);
+        const response = await api.put(`/staff/${updatedStaffMember._id}`, updatedStaffMember);
         setStaffMembers(prevStaffMembers =>
           prevStaffMembers.map(staff =>
-            staff.id === updatedStaffMember.id ? response.data.data : staff
+            staff._id === updatedStaffMember._id ? response.data.data : staff
           )
         );
         clearFormData();
@@ -106,7 +105,7 @@ const StaffManagement = () => {
 
   const clearFormData = () => {
     setFormData({
-      id: '',
+      _id: '',
       name: '',
       email: '',
       phoneNumber: '',
