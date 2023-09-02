@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useLocation } from 'react-router-dom';
 import api from './api';
 
-
 const StaffManagement = () => {
   const [staffMembers, setStaffMembers] = useState([]);
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -43,33 +42,32 @@ const StaffManagement = () => {
   };
 
   const editData = (index) => {
-  const staffToEdit = staffMembers[index];
-  setFormData({
-    id: staffToEdit._id, //  use _id
-    name: staffToEdit.name,
-    email: staffToEdit.email,
-    phoneNumber: staffToEdit.phoneNumber,
-    address: staffToEdit.address
-  });
-  setIsFormVisible(true);
-  setIsEditing(true);
-  toast.info('Editing staff member. Update the form and save!');
-};
+    const staffToEdit = staffMembers[index];
+    setFormData({
+      id: staffToEdit._id, // Use _id
+      name: staffToEdit.name,
+      email: staffToEdit.email,
+      phoneNumber: staffToEdit.phoneNumber,
+      address: staffToEdit.address
+    });
+    setIsFormVisible(true);
+    setIsEditing(true);
+    toast.info('Editing staff member. Update the form and save!');
+  };
 
   const deleteData = (index) => {
-  const staffToDelete = staffMembers[index];
-  console.log('Deleting staff with _id:', staffToDelete._id);
-  api.delete(`/staff/${staffToDelete._id}`) // Used staffToDelete._id
-    .then(() => {
-      const updatedStaffMembers = staffMembers.filter((_, i) => i !== index);
-      setStaffMembers(updatedStaffMembers);
-      toast.error('Staff member deleted successfully!');
-    })
-    .catch(() => {
-      toast.error("Error deleting staff member!");
-    });
-};
-
+    const staffToDelete = staffMembers[index];
+    console.log('Deleting staff with _id:', staffToDelete._id);
+    api.delete(`/staff/${staffToDelete._id}`) // Used staffToDelete._id
+      .then(() => {
+        const updatedStaffMembers = staffMembers.filter((_, i) => i !== index);
+        setStaffMembers(updatedStaffMembers);
+        toast.error('Staff member deleted successfully!');
+      })
+      .catch(() => {
+        toast.error("Error deleting staff member!");
+      });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
