@@ -8,7 +8,8 @@ import api from './api';
 const StaffManagement = () => {
   const [staffMembers, setStaffMembers] = useState([]);
   const [isFormVisible, setIsFormVisible] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isViewModalVisible, setIsViewModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -35,7 +36,7 @@ const StaffManagement = () => {
 
   const viewData = (index) => {
     setCurrentStaff(staffMembers[index]);
-    setIsModalVisible(true);
+    setIsViewModalVisible(true);
     toast.info('Viewing staff member details');
   };
 
@@ -50,13 +51,13 @@ const StaffManagement = () => {
     });
     setIsFormVisible(true);
     setIsEditing(true);
-    setIsModalVisible(true);
+    setIsEditModalVisible(true);
+    setIsViewModalVisible(false);
     toast.info('Editing staff member. Update the form and save!');
   };
 
   const deleteData = (index) => {
     const staffToDelete = staffMembers[index];
-    console.log('Deleting staff with _id:', staffToDelete._id);
     api.delete(`/staff/${staffToDelete._id}`)
       .then(() => {
         const updatedStaffMembers = staffMembers.filter((_, i) => i !== index);
@@ -104,13 +105,13 @@ const StaffManagement = () => {
   };
 
   const clearFormData = () => {
-  setFormData({
-    name: '',
-    email: '',
-    phoneNumber: '',
-    address: ''
-  });
-};
+    setFormData({
+      name: '',
+      email: '',
+      phoneNumber: '',
+      address: ''
+    });
+  };
 
   return (
     <div className="container mt-5">
@@ -163,104 +164,69 @@ const StaffManagement = () => {
           </tbody>
         </table>
       </div>
-      {/* Back to Home Button */}
-      <Link to="/" className="btn btn-secondary mb-4 float-end">Back to Home</Link>
-
-      {/* Add/Edit Data Modal */}
-      <div className={`modal ${isFormVisible ? 'show' : ''}`} tabIndex="-1" style={{ display: isFormVisible ? 'block' : 'none' }}>
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">{isEditing ? 'Edit' : 'Add'} Data</h5>
-              <button type="button" className="btn-close" onClick={() => { setIsFormVisible(false); clearFormData(); setIsEditing(false); }} aria-label="Close"></button>
-            </div>
-            <div className="modal-body">
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label htmlFor="name">Name:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="email">Email:</label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="phoneNumber">Phone Number:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
-                    onChange={(e) => setFormData(prev => ({ ...prev, phoneNumber: e.target.value }))}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="address">Address:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="address"
-                    name="address"
-                    value={formData.address}
-                    onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-                    required
-                  />
-                </div>
-                <div className="modal-footer">
-                  <button type="submit" className="btn btn-success">{isEditing ? 'Save' : 'Add'}</button>
-                  <button type="button" className="btn btn-secondary" onClick={() => { setIsFormVisible(false); clearFormData(); setIsEditing(false); }}>Cancel</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* View Staff Modal */}
-      {isModalVisible && currentStaff && (
+      {/* Add/Edit Data Form */}
+      {isFormVisible && (
         <div className="modal show" tabIndex="-1" style={{ display: 'block' }}>
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Staff Details</h5>
-                <button type="button" className="btn-close" onClick={() => setIsModalVisible(false)} aria-label="Close"></button>
+                <h5 className="modal-title">{isEditing ? 'Edit Staff Member' : 'Add New Staff Member'}</h5>
+                <button type="button" className="close" onClick={() => { setIsFormVisible(false); clearFormData(); }}>
+                  <span aria-hidden="true">&times;</span>
+                </button>
               </div>
               <div className="modal-body">
-                <p><strong>ID:</strong> {currentStaff._id}</p>
-                <p><strong>Name:</strong> {currentStaff.name}</p>
-                <p><strong>Email:</strong> {currentStaff.email}</p>
-                <p><strong>Phone:</strong> {currentStaff.phoneNumber}</p>
-                <p><strong>Address:</strong> {currentStaff.address}</p>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setIsModalVisible(false)}>Close</button>
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-3">
+                    <label htmlFor="name" className="form-label">Name</label>
+                    <input type="text" className="form-control" id="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="email" className="form-label">Email</label>
+                    <input type="email" className="form-control" id="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="phoneNumber" className="form-label">Phone Number</label>
+                    <input type="text" className="form-control" id="phoneNumber" value={formData.phoneNumber} onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })} required />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="address" className="form-label">Address</label>
+                    <input type="text" className="form-control" id="address" value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} required />
+                  </div>
+                  <div className="modal-footer">
+                    <button type="submit" className="btn btn-primary">{isEditing ? 'Update' : 'Add'}</button>
+                    <button type="button" className="btn btn-secondary" onClick={() => { setIsFormVisible(false); setIsEditing(false); clearFormData(); }}>Close</button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
         </div>
       )}
-
+      {/* View Staff Modal */}
+      {isViewModalVisible && currentStaff && (
+        <div className="modal show" tabIndex="-1" style={{ display: 'block' }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">View Staff Member</h5>
+                <button type="button" className="close" onClick={() => setIsViewModalVisible(false)}>
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <p><strong>Name:</strong> {currentStaff.name}</p>
+                <p><strong>Email:</strong> {currentStaff.email}</p>
+                <p><strong>Phone Number:</strong> {currentStaff.phoneNumber}</p>
+                <p><strong>Address:</strong> {currentStaff.address}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <ToastContainer />
     </div>
   );
-}
+};
 
 export default StaffManagement;
