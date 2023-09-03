@@ -52,11 +52,13 @@ function App() {
     return (
         <Router>
             <CartProvider>
-                {/* 3. Pass the authentication status and the toggle function to the Navbar */}
-                <Navbar onCartClick={() => setShowCartSidebar(true)} isAuthenticated={isAdminAuthenticated} onAuthChange={toggleAuthentication} />
-                <div className="app-content">
-                    <main>
-                        <Routes>
+                <Routes>
+                    {/* Render Navbar only if not on StaffManagement page */}
+                    {!window.location.pathname.includes('/staff-management') && (
+                        <Navbar onCartClick={() => setShowCartSidebar(true)} isAuthenticated={isAdminAuthenticated} onAuthChange={toggleAuthentication} />
+                    )}
+                    <div className="app-content">
+                        <main>
                             <Route path="/" element={<CafeWebpage />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/signup" element={<Signup />} />
@@ -64,12 +66,13 @@ function App() {
                             <Route path="/staff-management" element={<ProtectedStaffManagement />} />
                             <Route path="/signup-admin" element={<SignUpAdmin />} />
                             <Route path="/contact-us-admin" element={<ContactUsAdmin />} />
-                        </Routes>
-                    </main>
-                </div>
-                {showCartSidebar && <CartSidebar ref={cartSidebarRef} onClose={() => setShowCartSidebar(false)} />}
-                <ToastContainer />
-                <Footer />
+                        </main>
+                    </div>
+                    {showCartSidebar && <CartSidebar ref={cartSidebarRef} onClose={() => setShowCartSidebar(false)} />}
+                    <ToastContainer />
+                    {/* Render Footer only if not on StaffManagement page */}
+                    {!window.location.pathname.includes('/staff-management') && <Footer />}
+                </Routes>
             </CartProvider>
         </Router>
     );
