@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useLocation } from 'react-router-dom';
@@ -115,20 +114,6 @@ const StaffManagement = () => {
 
   return (
     <div className="container mt-5">
-      {/* Navigation */}
-      <nav>
-        <ul className="nav nav-tabs mb-3">
-          <li className="nav-item">
-            <Link className="nav-link active" to="/staff-management">Staff Management</Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/signup-admin">Sign Up Admin</Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/contact-us-admin">Contact Us Admin</Link>
-          </li>
-        </ul>
-      </nav>
       {/* Title */}
       <h1 className="text-center mb-4">Staff Management</h1>
       {/* Add Data Button */}
@@ -164,9 +149,6 @@ const StaffManagement = () => {
           </tbody>
         </table>
       </div>
-      {/* Back to Home Button */}
-      <Link to="/" className="btn btn-secondary mb-4 float-end">Back to Home</Link>
-          
       {/* Add/Edit Data Form */}
       {isFormVisible && (
         <div className="modal show" tabIndex="-1" style={{ display: 'block' }}>
@@ -174,7 +156,7 @@ const StaffManagement = () => {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">{isEditing ? 'Edit Staff Member' : 'Add New Staff Member'}</h5>
-               </div>
+              </div>
               <div className="modal-body">
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3">
@@ -204,25 +186,25 @@ const StaffManagement = () => {
         </div>
       )}
       {/* View Staff Modal */}
-{isViewModalVisible && currentStaff && (
-  <div className="modal show" tabIndex="-1" style={{ display: 'block' }}>
-    <div className="modal-dialog">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h5 className="modal-title">View Staff Member</h5>
-          <button type="button" className="btn-close" onClick={() => setIsViewModalVisible(false)} aria-label="Close"></button>
+      {isViewModalVisible && currentStaff && (
+        <div className="modal show" tabIndex="-1" style={{ display: 'block' }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">View Staff Member</h5>
+                <button type="button" className="btn-close" onClick={() => setIsViewModalVisible(false)} aria-label="Close"></button>
+              </div>
+              <div className="modal-body">
+                {/* View content */}
+                <p><strong>Name:</strong> {currentStaff.name}</p>
+                <p><strong>Email:</strong> {currentStaff.email}</p>
+                <p><strong>Phone Number:</strong> {currentStaff.phoneNumber}</p>
+                <p><strong>Address:</strong> {currentStaff.address}</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="modal-body">
-          {/* View content */}
-          <p><strong>Name:</strong> {currentStaff.name}</p>
-          <p><strong>Email:</strong> {currentStaff.email}</p>
-          <p><strong>Phone Number:</strong> {currentStaff.phoneNumber}</p>
-          <p><strong>Address:</strong> {currentStaff.address}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+      )}
       <ToastContainer />
     </div>
   );
