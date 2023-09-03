@@ -37,7 +37,6 @@ const StaffManagement = () => {
   const viewData = (index) => {
     setCurrentStaff(staffMembers[index]);
     setIsViewModalVisible(true);
-    setIsEditModalVisible(false);
     toast.info('Viewing staff member details');
   };
 
