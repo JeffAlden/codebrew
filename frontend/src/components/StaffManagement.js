@@ -174,9 +174,7 @@ const StaffManagement = () => {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">{isEditing ? 'Edit Staff Member' : 'Add New Staff Member'}</h5>
-                <button type="button" className="close" onClick={() => { setIsFormVisible(false); clearFormData(); }}>
-                    </button>
-              </div>
+               </div>
               <div className="modal-body">
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3">
