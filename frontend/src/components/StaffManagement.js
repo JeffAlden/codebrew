@@ -14,7 +14,7 @@ const StaffManagement = () => {
     name: '',
     email: '',
     phoneNumber: '',
-    address: ''
+    address: '',
   });
 
   const [currentStaff, setCurrentStaff] = useState(null);
@@ -37,6 +37,7 @@ const StaffManagement = () => {
   const viewData = (index) => {
     setCurrentStaff(staffMembers[index]);
     setIsViewModalVisible(true);
+    setIsEditModalVisible(false);
     toast.info('Viewing staff member details');
   };
 
@@ -47,7 +48,7 @@ const StaffManagement = () => {
       name: staffToEdit.name,
       email: staffToEdit.email,
       phoneNumber: staffToEdit.phoneNumber,
-      address: staffToEdit.address
+      address: staffToEdit.address,
     });
     setIsFormVisible(true);
     setIsEditing(true);
@@ -65,7 +66,7 @@ const StaffManagement = () => {
         toast.error('Staff member deleted successfully!');
       })
       .catch(() => {
-        toast.error("Error deleting staff member!");
+        toast.error('Error deleting staff member!');
       });
   };
 
@@ -109,7 +110,7 @@ const StaffManagement = () => {
       name: '',
       email: '',
       phoneNumber: '',
-      address: ''
+      address: '',
     });
   };
 
