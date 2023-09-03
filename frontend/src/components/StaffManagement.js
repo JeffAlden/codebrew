@@ -164,6 +164,9 @@ const StaffManagement = () => {
           </tbody>
         </table>
       </div>
+      {/* Back to Home Button */}
+      <Link to="/" className="btn btn-secondary mb-4 float-end">Back to Home</Link>
+          
       {/* Add/Edit Data Form */}
       {isFormVisible && (
         <div className="modal show" tabIndex="-1" style={{ display: 'block' }}>
@@ -172,7 +175,7 @@ const StaffManagement = () => {
               <div className="modal-header">
                 <h5 className="modal-title">{isEditing ? 'Edit Staff Member' : 'Add New Staff Member'}</h5>
                 <button type="button" className="close" onClick={() => { setIsFormVisible(false); clearFormData(); }}>
-                  <span aria-hidden="true">&times;</span>
+                  {/* Removed the close (x) button */}
                 </button>
               </div>
               <div className="modal-body">
@@ -211,7 +214,7 @@ const StaffManagement = () => {
               <div className="modal-header">
                 <h5 className="modal-title">View Staff Member</h5>
                 <button type="button" className="close" onClick={() => setIsViewModalVisible(false)}>
-                  <span aria-hidden="true">&times;</span>
+                  {/* Removed the close (x) button */}
                 </button>
               </div>
               <div className="modal-body">
