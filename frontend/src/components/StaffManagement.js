@@ -210,7 +210,7 @@ const StaffManagement = () => {
       <div className="modal-content">
         <div className="modal-header">
           <h5 className="modal-title">View Staff Member</h5>
-          <button type="button" className="btn btn-secondary" onClick={() => { setIsFormVisible(false); setIsEditing(false); clearFormData(); }}>Close</button>
+          <button type="button" className="btn-close" onClick={() => setIsViewModalVisible(false)} aria-label="Close"></button>
         </div>
         <div className="modal-body">
           {/* View content */}
