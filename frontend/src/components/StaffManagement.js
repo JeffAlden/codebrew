@@ -213,9 +213,7 @@ const StaffManagement = () => {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">View Staff Member</h5>
-                <button type="button" className="close" onClick={() => setIsViewModalVisible(false)}>
-                  {/* Removed the close (x) button */}
-                </button>
+                <button type="button" className="btn-close" onClick={() => setIsModalVisible(false)} aria-label="Close"></button>
               </div>
               <div className="modal-body">
                 <p><strong>Name:</strong> {currentStaff.name}</p>
