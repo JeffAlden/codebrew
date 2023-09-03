@@ -207,24 +207,25 @@ const StaffManagement = () => {
         </div>
       )}
       {/* View Staff Modal */}
-      {isViewModalVisible && currentStaff && (
-        <div className="modal show" tabIndex="-1" style={{ display: 'block' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">View Staff Member</h5>
-                <button type="button" className="btn-close" onClick={() => setIsModalVisible(false)} aria-label="Close"></button>
-              </div>
-              <div className="modal-body">
-                <p><strong>Name:</strong> {currentStaff.name}</p>
-                <p><strong>Email:</strong> {currentStaff.email}</p>
-                <p><strong>Phone Number:</strong> {currentStaff.phoneNumber}</p>
-                <p><strong>Address:</strong> {currentStaff.address}</p>
-              </div>
-            </div>
-          </div>
+{isViewModalVisible && currentStaff && (
+  <div className="modal show" tabIndex="-1" style={{ display: 'block' }}>
+    <div className="modal-dialog">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">View Staff Member</h5>
+          <button type="button" className="btn-close" onClick={() => setIsViewModalVisible(false)} aria-label="Close"></button>
         </div>
-      )}
+        <div className="modal-body">
+          {/* View content */}
+          <p><strong>Name:</strong> {currentStaff.name}</p>
+          <p><strong>Email:</strong> {currentStaff.email}</p>
+          <p><strong>Phone Number:</strong> {currentStaff.phoneNumber}</p>
+          <p><strong>Address:</strong> {currentStaff.address}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
       <ToastContainer />
     </div>
   );
